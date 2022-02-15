@@ -1,1 +1,1 @@
-Rocket Academt Project 5 Backend - Neighbourhood App
+Rocket Academy Project 5 Backend - Neighbourhood App
