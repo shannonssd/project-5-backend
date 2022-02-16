@@ -8,8 +8,9 @@
  * ========================================================
  */
 class BaseController {
-  constructor(db, model) {
-    this.db = db;
+  constructor(model) {
+    // this.db = db;
+    // mongo doesn't seem to need db?
     this.model = model;
   }
 }

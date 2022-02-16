@@ -25,8 +25,8 @@ const { PW_SALT_ROUND, JWT_SALT } = process.env;
  * ========================================================
  */
 class UserController extends BaseController {
-  constructor(db, model) {
-    super(db, model);
+  constructor(model) {
+    super(model);
   }
 
   /*
@@ -35,7 +35,7 @@ class UserController extends BaseController {
   *                else store data in DB
   * ========================================================
   */
-  async signUp(req, res) { //***** TO CHANGE TO MONGODB? ******
+  async signUp(req, res) { //* **** TO CHANGE TO MONGODB? ******
     const { userEmail, userPassword } = req.body;
     // If email or password missing, inform player
     if (!userEmail || !userPassword) {
@@ -68,7 +68,7 @@ class UserController extends BaseController {
   *         details and let user know the outcome
   * ========================================================
   */
-  async login(req, res) { //***** TO CHANGE TO MONGODB? ******
+  async login(req, res) { //* **** TO CHANGE TO MONGODB? ******
     const { userEmail, userPassword } = req.body;
 
     // If email or password missing, inform player
