@@ -11,15 +11,16 @@
 import userRouter from '../routers/userRouter.mjs';
 
 // Import controllers
-import UserController from '../controller/userController.mjs';
+import UserController from '../controllers/userController.mjs';
 
-// Import models  ***** TO CHANGE TO MONGODB? ******
-// import Item from '../models/itemSchema.mjs';
-import User from '../models/userSchema.mjs';
+// Import models
+import UserModel from '../models/userModel.mjs';
+import ChatModel from '../models/chatModel.mjs';
+import NoticeModel from '../models/noticeModel.mjs';
+import InterestGroupModel from '../models/interestGroupModel.mjs';
 
-// Initialise controllers  ***** TO CHANGE TO MONGODB? ******
-const userController = new UserController(User);
-// const itemController = new ItemController(User)
+// Initialise controllers
+const userController = new UserController(UserModel);
 
 /*
  * ========================================================

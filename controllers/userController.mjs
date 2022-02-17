@@ -1,3 +1,5 @@
+/* eslint-disable no-console */
+/* eslint-disable no-useless-constructor */
 /*
  * ========================================================
  * ========================================================
@@ -38,9 +40,7 @@ class UserController extends BaseController {
   async test(req, res) {
     console.log('POST Request: /users/test');
     const newUser = await this.model.create({
-      name: 'Doraemon',
-      email: 'doraemon@future.com',
-      password: 'doradora',
+      likedHandMeDowns: ['bag', 'dog', 'tv'],
     });
     return res.status(200).json({ test: 'success', newUser });
   }
