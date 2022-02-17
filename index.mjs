@@ -63,12 +63,12 @@ bindRoutes(app);
 * ========================================================
 */
 
-const uri = `mongodb+srv://${process.env.MONGO_ATLAS_USER}:${process.env.MONGO_ATLAS_PW}@main.ad3l7.mongodb.net/neighbourhood?retryWrites=true&w=majority`;
+const uri = process.env.MONGODB_URI;
 
 const PORT = process.env.PORT || 3004;
 
 // only connect to port after connecting to db
-mongoose.connect(uri, { userNewUrlParser: true, useUnifiedTopology: true })
+mongoose.connect(uri)
   .then((result) => {
     app.listen(PORT);
     console.log(`connected to port ${PORT}`);

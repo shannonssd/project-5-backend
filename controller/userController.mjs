@@ -31,6 +31,22 @@ class UserController extends BaseController {
 
   /*
   * ========================================================
+  *                       TESTING
+  * ========================================================
+  */
+
+  async test(req, res) {
+    console.log('POST Request: /users/test');
+    const newUser = await this.model.create({
+      name: 'Doraemon',
+      email: 'doraemon@future.com',
+      password: 'doradora',
+    });
+    return res.status(200).json({ test: 'success', newUser });
+  }
+
+  /*
+  * ========================================================
   *   When user tries to signup, check if username exists,
   *                else store data in DB
   * ========================================================

@@ -12,6 +12,8 @@ const router = express.Router();
  * ========================================================
  */
 export default function userRouter(controller) {
+  // Test route
+  router.post('/test', controller.test.bind(controller));
   // Route for new sign up
   router.post('/signup', controller.signUp.bind(controller));
   // Route for login attempt
