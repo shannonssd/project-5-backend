@@ -13,6 +13,7 @@ import bcrypt from 'bcrypt';
 import jwt from 'jsonwebtoken';
 import dotenv from 'dotenv';
 import BaseController from './baseController.mjs';
+import handleImage from '../utils/s3.mjs';
 
 dotenv.config();
 const { PW_SALT_ROUND, JWT_SALT } = process.env;
@@ -38,10 +39,10 @@ class UserController extends BaseController {
   */
 
   async test(req, res) {
-    // Logic for storing profile pic in s3
-    const image = req.file;
-    console.log(image);
-    console.log('POST Request: /users/test');
+    // Store profile pic in AWS S3 and return image link
+    const imageLink = await handleImage(req.file);
+    console.log('Main IMAGE', imageLink);
+
     const newUser = await this.model.create({
       district: 'Toa Payoh',
       name: 'Doggos',
