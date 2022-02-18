@@ -14,6 +14,7 @@ import jwt from 'jsonwebtoken';
 import dotenv from 'dotenv';
 import BaseController from './baseController.mjs';
 import handleImage from '../utils/s3.mjs';
+import assignDistrict from '../utils/district.mjs';
 
 dotenv.config();
 const { PW_SALT_ROUND, JWT_SALT } = process.env;
@@ -34,72 +35,63 @@ class UserController extends BaseController {
 
   /*
   * ========================================================
-  *                       TESTING
-  * ========================================================
-  */
-
-  async test(req, res) {
-    // Store profile pic in AWS S3 and return image link
-    const imageLink = await handleImage(req.file);
-    console.log('Main IMAGE', imageLink);
-
-    const newUser = await this.model.create({
-      district: 'Toa Payoh',
-      name: 'Doggos',
-      description: 'Group for ppl who like cute doggos',
-      members: ['1', '2', '3'],
-      posts: [
-        {
-          postedBy: 'Shabn',
-          post: 'this doogo so cute!',
-          links: 'http://...',
-          likedBy: ['1', '2', '3'],
-        },
-        {
-          postedBy: 'HP',
-          post: 'this cat so cute!',
-          links: 'http://...',
-          likedBy: ['4', '5', '6'],
-        },
-      ],
-    });
-    return res.status(200).json({ test: 'success', newUser });
-  }
-
-  /*
-  * ========================================================
   *   When user tries to signup, check if username exists,
   *                else store data in DB
   * ========================================================
   */
-  async signUp(req, res) { //* **** TO CHANGE TO MONGODB? ******
-    const { userEmail, userPassword } = req.body;
-    // If email or password missing, inform player
-    if (!userEmail || !userPassword) {
-      return res.send('details missing');
+  async signUp(req, res) {
+    const {
+      name, email, password, street, block, postalCode,
+    } = req.body;
+
+    const photo = req.file;
+
+    // If details missing, inform player
+    if (!name || !email || !password || !street || !block || !postalCode || !photo) {
+      return res.status(400).json({ message: 'details missing' });
     }
+    console.log('email', email);
 
     // Check if username already exists
-    const checkIfUserExists = await this.model.findOne({
-      where: {
-        userEmail,
-      },
-    });
+    const checkIfUserExists = await this.model.find({ email: 'test' });
+    console.log('checkIfUserExists', checkIfUserExists);
+
+    // Check if postal code is valid
+    const district = assignDistrict(postalCode);
+    if (district === 'Nil') {
+      return res.status(400).json({ message: 'No District Found. Please try again!' });
+    }
 
     // If no such username in database, create new one
     if (checkIfUserExists === null) {
-      // // Logic for storing profile pic in s3
-      // const image = req.file;
+      // Store profile pic in AWS S3 and return image link
+      const imageLink = await handleImage(req.file);
+      console.log('Main IMAGE', imageLink);
 
-      const hash = await bcrypt.hash(userPassword, Number(PW_SALT_ROUND));
+      const hash = await bcrypt.hash(password, Number(PW_SALT_ROUND));
+
       await this.model.create({
-        userEmail,
-        userPassword: hash,
+        userDetails: {
+          name,
+          email,
+          password: hash,
+          photo: imageLink,
+        },
+        addressDetails: {
+          address: {
+            street,
+            block,
+            postalCode,
+          },
+          district,
+          displayAddress: street,
+        },
       });
-      return res.status(200).send('sign up success');
+      console.log('WOKRING!');
+      return res.status(200).json({ message: 'sign up success' });
     }
     // Else inform user that username already exists
-    return res.send('user exists');
+    return res.status(400).json({ message: 'user exists' });
   }
 
   /*

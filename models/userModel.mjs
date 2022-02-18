@@ -44,8 +44,15 @@ const userSchema = new Schema(
     },
     addressDetails: {
       address: {
-        type: String,
-        // required: true,
+        street: {
+          type: String,
+        },
+        block: {
+          type: String,
+        },
+        postalCode: {
+          type: String,
+        },
       },
       displayAddress: {
         type: String,
@@ -69,20 +76,20 @@ const userSchema = new Schema(
       },
       peopleInterested: {
         // Store userDetails ObjectId of users who have liked this item
-        type: [String],
+        type: [mongoose.SchemaTypes.ObjectId],
         // Prevent empty array from automatically being defined
         default: undefined,
       },
     }],
     likedHandMeDowns: {
       // Store handMeDown items ObjectId of users who have liked this item
-      type: [String],
+      type: [mongoose.SchemaTypes.ObjectId],
       // Prevent empty array from automatically being defined
       default: undefined,
     },
     interestGroups: {
       // Store ?InterestGroup.name ObjectId of joined groups
-      type: [String],
+      type: [mongoose.SchemaTypes.ObjectId],
       // Prevent empty array from automatically being defined
       default: undefined,
     },
