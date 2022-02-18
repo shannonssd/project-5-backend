@@ -24,10 +24,8 @@ const router = express.Router();
  * ========================================================
  */
 export default function userRouter(controller) {
-  // Test route
-  router.post('/test', multerUpload.single('image'), controller.test.bind(controller));
   // Route for new sign up
-  router.post('/signup', controller.signUp.bind(controller));
+  router.post('/signup', multerUpload.single('photo'), controller.signUp.bind(controller));
   // Route for login attempt
   router.post('/login', controller.login.bind(controller));
   return router;
