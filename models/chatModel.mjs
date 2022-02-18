@@ -14,7 +14,7 @@ import mongoose from 'mongoose';
  * ========================================================
  *
  *              Schema describing structure of
- *             documents for chats collection
+ *              documents for chats collection
  *
  * ========================================================
  * ========================================================

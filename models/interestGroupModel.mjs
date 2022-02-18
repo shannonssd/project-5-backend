@@ -35,11 +35,7 @@ const interestGroupSchema = new Schema(
       type: String,
     },
     bannerPhoto: {
-      data: Buffer,
-      contentType: String,
-    },
-    dateCreated: {
-      type: Date.now(), // Probalby not correct ################
+      type: String,
     },
     members: {
       // Store userDetails ObjectId of users who have joined this group
@@ -73,4 +69,4 @@ const interestGroupSchema = new Schema(
 );
 
 // Create model from schema to access and alter database
-export default mongoose.model('InterestGroup', interestGroupSchema);
+export default mongoose.model('interest_group', interestGroupSchema, 'interestGroups');

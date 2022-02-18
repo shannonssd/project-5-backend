@@ -39,8 +39,7 @@ const userSchema = new Schema(
         // required: true,
       },
       photo: {
-        data: Buffer,
-        contentType: String,
+        type: String,
       },
     },
     addressDetails: {
@@ -66,8 +65,7 @@ const userSchema = new Schema(
         type: String,
       },
       photo: {
-        data: Buffer,
-        contentType: String,
+        type: String,
       },
       peopleInterested: {
         // Store userDetails ObjectId of users who have liked this item

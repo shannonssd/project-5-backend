@@ -34,8 +34,7 @@ const noticeSchema = new Schema(
       type: String,
     },
     image: {
-      data: Buffer,
-      contentType: String,
+      type: String,
     },
   },
   {

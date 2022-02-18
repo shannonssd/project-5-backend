@@ -20,7 +20,7 @@ import NoticeModel from '../models/noticeModel.mjs';
 import InterestGroupModel from '../models/interestGroupModel.mjs';
 
 // Initialise controllers
-const userController = new UserController(UserModel);
+const userController = new UserController(InterestGroupModel);
 
 /*
  * ========================================================
