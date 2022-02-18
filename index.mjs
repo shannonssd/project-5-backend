@@ -1,3 +1,4 @@
+/* eslint-disable no-console */
 /*
  * ========================================================
  * ========================================================
@@ -56,20 +57,19 @@ bindRoutes(app);
 * ========================================================
 * ========================================================
 *
-*                   Connect to db
-*         Set Express to listen on the given port
+*                     Connect to db
+*              Once connection is established,
+*          Set Express to listen on the given port
 *
 * ========================================================
 * ========================================================
 */
-
 const uri = process.env.MONGODB_URI;
-
 const PORT = process.env.PORT || 3004;
 
 // only connect to port after connecting to db
 mongoose.connect(uri)
-  .then((result) => {
+  .then(() => {
     app.listen(PORT);
     console.log(`connected to port ${PORT}`);
     console.log('connected to db');
