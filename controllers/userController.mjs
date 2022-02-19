@@ -18,7 +18,7 @@ import handleImage from '../utils/s3.mjs';
 import assignDistrict from '../utils/district.mjs';
 
 dotenv.config();
-const { PW_SALT_ROUND, JWT_SALT } = process.env;
+const { PW_SALT_ROUND, JWT_SALT, BACKEND_URL } = process.env;
 
 /*
  * ========================================================
@@ -130,6 +130,34 @@ class UserController extends BaseController {
     }
     // If password incorrect inform user
     return res.status(400).json({ message: 'Username or password incorrect' });
+  }
+
+  /*
+  * ========================================================
+  *         User adds item to hand-me-down catalog
+  *
+  * ========================================================
+  */
+
+  async addItem(req, res) {
+    console.log(`POST Request: ${BACKEND_URL}/users/add-item`);
+    console.log('<=== req.body ===>', req.body);
+    const { name, description, condition } = req.body;
+
+    try {
+      const user = await this.model.findById('6210a9f338d9ea4c45ad7343');
+      console.log('<== user found by id ==>', user[0]);
+      if (user[0].handMeDowns !== undefined) {
+        user[0].handMeDowns = [{
+          name,
+          description,
+          condition,
+        }];
+      }
+
+      await user[0].save;
+      res.status(200).send('item added to db');
+    } catch (err) { console.log(err); }
   }
 }
 
