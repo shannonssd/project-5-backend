@@ -70,13 +70,12 @@ function uploadFile(file) {
  * ========================================================
  */
 const handleImage = async (image) => {
-  console.log(image);
   // Rename image
   fs.rename(
     `./public/uploads/${image.filename}`,
     `./public/uploads/${image.originalname}`,
     () => {
-      console.log('callback');
+      console.log('mandatory callback');
     },
   );
   image.filename = `${image.originalname}`;

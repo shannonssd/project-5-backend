@@ -2,7 +2,7 @@
 export default function assignDistrict(postalCode) {
   const digitsArr = postalCode.split('');
   const districtNum = digitsArr[0] + digitsArr[1];
-  console.log('districtnum', districtNum);
+
   switch (districtNum) {
     case '01':
     case '02':

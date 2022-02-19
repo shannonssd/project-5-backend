@@ -40,18 +40,21 @@ const userSchema = new Schema(
       },
       photo: {
         type: String,
+        // required: true,
       },
     },
     addressDetails: {
       address: {
         street: {
           type: String,
+          // required: true,
         },
         block: {
           type: String,
         },
         postalCode: {
           type: String,
+          // required: true,
         },
       },
       displayAddress: {
@@ -61,35 +64,39 @@ const userSchema = new Schema(
         type: String,
       },
     },
-    handMeDowns: [{
-      itemName: {
-        type: String,
-      },
-      description: {
-        type: String,
-      },
-      condition: {
-        type: String,
-      },
-      photo: {
-        type: String,
-      },
-      peopleInterested: {
-        // Store userDetails ObjectId of users who have liked this item
-        type: [mongoose.SchemaTypes.ObjectId],
-        // Prevent empty array from automatically being defined
-        default: undefined,
-      },
-    }],
+    handMeDowns: {
+      type: [{
+        itemName: {
+          type: String,
+        },
+        description: {
+          type: String,
+        },
+        condition: {
+          type: String,
+        },
+        photo: {
+          type: String,
+        },
+        peopleInterested: {
+        // Embed userDetails ObjectId of users who are interested in this item
+          type: [String],
+          // Prevent empty array from automatically being defined
+          default: undefined,
+        },
+      }],
+      // Prevent empty array from automatically being defined
+      default: undefined,
+    },
     likedHandMeDowns: {
-      // Store handMeDown items ObjectId of users who have liked this item
-      type: [mongoose.SchemaTypes.ObjectId],
+      // Embed handMeDown items ObjectId of items which this user is interested in
+      type: [String],
       // Prevent empty array from automatically being defined
       default: undefined,
     },
     interestGroups: {
-      // Store ?InterestGroup.name ObjectId of joined groups
-      type: [mongoose.SchemaTypes.ObjectId],
+      // Embed ?InterestGroup.name ObjectId of joined groups
+      type: [String],
       // Prevent empty array from automatically being defined
       default: undefined,
     },
