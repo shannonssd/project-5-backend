@@ -38,6 +38,8 @@ app.use(cors({
 app.use(cookieParser());
 // Bind Express middleware to parse JSON request bodies
 app.use(express.json());
+// Bind Express middleware to parse request bodies for POST requests
+app.use(express.urlencoded({ extended: false }));
 // Expose the files stored in the public folder
 app.use(express.static('public'));
 

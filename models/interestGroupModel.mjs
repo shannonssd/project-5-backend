@@ -38,30 +38,34 @@ const interestGroupSchema = new Schema(
       type: String,
     },
     members: {
-      // Store userDetails ObjectId of users who have joined this group
-      type: [mongoose.SchemaTypes.ObjectId],
+      // Embed userDetails ObjectId of users who have joined this group
+      type: [String],
       // Prevent empty array from automatically being defined
       default: undefined,
     },
-    posts: [
-      {
-        postedBy: {
-          type: String,
+    posts: {
+      type: [
+        {
+          postedBy: {
+            type: String,
+          },
+          post: {
+            type: String,
+          },
+          links: {
+            type: String,
+          },
+          likedBy: {
+          // Embed userDetails ObjectId of users who have joined this group
+            type: [String],
+            // Prevent empty array from automatically being defined
+            default: undefined,
+          },
         },
-        post: {
-          type: String,
-        },
-        links: {
-          type: String,
-        },
-        likedBy: {
-          // Store userDetails ObjectId of users who have joined this group
-          type: [mongoose.SchemaTypes.ObjectId],
-          // Prevent empty array from automatically being defined
-          default: undefined,
-        },
-      },
-    ],
+      ],
+      // Prevent empty array from automatically being defined
+      default: undefined,
+    },
   },
   {
     timestamps: true,
