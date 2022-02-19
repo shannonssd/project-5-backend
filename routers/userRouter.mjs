@@ -28,5 +28,7 @@ export default function userRouter(controller) {
   router.post('/signup', multerUpload.single('photo'), controller.signUp.bind(controller));
   // Route for login attempt
   router.post('/login', controller.login.bind(controller));
+  // Route for adding item
+  router.post('/add-item', controller.addItem.bind(controller));
   return router;
 }
