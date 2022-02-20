@@ -27,6 +27,6 @@ export default function userRouter(controller) {
   // Route for new sign up
   router.post('/signup', multerUpload.single('photo'), controller.signUp.bind(controller));
   // Route for login attempt
-  router.post('/login', controller.login.bind(controller));
+  router.get('/login', controller.login.bind(controller));
   return router;
 }
