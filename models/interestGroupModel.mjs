@@ -39,7 +39,7 @@ const interestGroupSchema = new Schema(
     },
     members: {
       // Embed userDetails ObjectId of users who have joined this group
-      type: [String],
+      type: [mongoose.Schema.Types.ObjectId],
       // Prevent empty array from automatically being defined
       default: undefined,
     },
@@ -57,7 +57,7 @@ const interestGroupSchema = new Schema(
           },
           likedBy: {
           // Embed userDetails ObjectId of users who have joined this group
-            type: [String],
+            type: [mongoose.Schema.Types.ObjectId],
             // Prevent empty array from automatically being defined
             default: undefined,
           },
