@@ -80,7 +80,7 @@ const userSchema = new Schema(
         },
         peopleInterested: {
         // Embed userDetails ObjectId of users who are interested in this item
-          type: [String],
+          type: [mongoose.Schema.Types.ObjectId],
           // Prevent empty array from automatically being defined
           default: undefined,
         },
@@ -90,13 +90,13 @@ const userSchema = new Schema(
     },
     likedHandMeDowns: {
       // Embed handMeDown items ObjectId of items which this user is interested in
-      type: [String],
+      type: [mongoose.Schema.Types.ObjectId],
       // Prevent empty array from automatically being defined
       default: undefined,
     },
     interestGroups: {
       // Embed ?InterestGroup.name ObjectId of joined groups
-      type: [String],
+      type: [mongoose.Schema.Types.ObjectId],
       // Prevent empty array from automatically being defined
       default: undefined,
     },

@@ -45,13 +45,13 @@ class UserController extends BaseController {
   * ========================================================
   */
   async signUp(req, res) {
-    console.log(`POST Request: ${BACKEND_URL}/users/signup`);
-    console.log('<=== req.body ===>', req.body);
-    console.log('<=== req.file ===>', req.file);
     const {
       name, email, password, street, block, postalCode,
     } = req.body;
     const photo = req.file;
+    console.log(`POST Request: ${BACKEND_URL}/users/signup`);
+    console.log('<=== req.body ===>', req.body);
+    console.log('<=== req.file ===>', req.file);
 
     // If details missing, inform user
     if (!name || !email || !password || !street || !block || !postalCode || !photo) {
@@ -104,9 +104,9 @@ class UserController extends BaseController {
   * ========================================================
   */
   async login(req, res) {
+    const { email, password } = req.query;
     console.log(`GET Request: ${BACKEND_URL}/users/login`);
     console.log('<=== req.query ===>', req.query);
-    const { email, password } = req.query;
 
     // If email or password missing, inform player
     if (!email || !password) {

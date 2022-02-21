@@ -13,7 +13,25 @@ import cookieParser from 'cookie-parser';
 import dotenv from 'dotenv';
 import cors from 'cors';
 import mongoose from 'mongoose';
+import { createServer } from 'http';
+import { Server } from 'socket.io';
 import bindRoutes from './routes/routes.mjs';
+
+const app = express();
+const FRONTEND_URL = process.env.FRONTEND_URL || 'http://localhost:3000';
+
+app.use(cors({
+  credentials: true,
+  origin: FRONTEND_URL,
+}));
+
+const httpServer = createServer(app);
+const io = new Server(httpServer, {
+  cors: {
+    credentials: true,
+    origin: FRONTEND_URL,
+  },
+});
 
 dotenv.config();
 
@@ -27,13 +45,13 @@ dotenv.config();
 * ========================================================
 */
 // Initialise Express instance
-const app = express();
+// const app = express();
 // Set CORS headers
-const FRONTEND_URL = process.env.FRONTEND_URL || 'http://localhost:3000';
-app.use(cors({
-  credentials: true,
-  origin: FRONTEND_URL,
-}));
+// const FRONTEND_URL = process.env.FRONTEND_URL || 'http://localhost:3000';
+// app.use(cors({
+//   credentials: true,
+//   origin: FRONTEND_URL,
+// }));
 // Bind cookie parser middleware to parse cookies in requests
 app.use(cookieParser());
 // Bind Express middleware to parse JSON request bodies
@@ -53,7 +71,7 @@ app.use(express.static('public'));
  * ========================================================
  * ========================================================
  */
-bindRoutes(app);
+bindRoutes(app, io);
 
 /*
 * ========================================================
@@ -72,7 +90,7 @@ const PORT = process.env.PORT || 3004;
 // only connect to port after connecting to db
 mongoose.connect(uri)
   .then(() => {
-    app.listen(PORT);
+    httpServer.listen(PORT);
     console.log(`connected to port ${PORT}`);
     console.log('connected to db');
   })
