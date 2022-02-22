@@ -31,10 +31,6 @@ const initChatsSocketController = () => {
   * ========================================================
   */
   const onlineChat = async (socket, data) => {
-    console.log('onlineChat working');
-    console.log('socket id', socket.id);
-    console.log('<=== socket data ===>', data);
-
     try {
     // Add user to Online Chat collection
       await OnlineChatModel.create({
@@ -57,13 +53,58 @@ const initChatsSocketController = () => {
       // Combine all messages
       const allMessages = [...messages, ...messagesTwo];
 
-      // // Sort messages according to time sent
-      // const sortedMessages = allMessages.sort((a, b) => b.createdAt - a.createdAt);
+      // Sort messages according to time sent
+      allMessages.sort((a, b) => a.createdAt - b.createdAt);
+
+      // Get textees info
+      const user = await UserModel.findOne({ _id: data.texteeId }).select({ 'userDetails.name': 1, 'userDetails.photo': 1, 'addressDetails.displayAddress': 1 });
+
+      const sendData = {
+        allMessages,
+        user,
+      };
+      // Send messages to frontend
+      socket.emit('All messages', { sendData });
+    } catch (err) {
+      console.log(err);
+    }
+  };
+
+  /*
+  * ========================================================
+  *                  Upon receiving message,
+  *               store in DB and inform user
+  *     and textee (if they are also in the chatroom)
+  * ========================================================
+  */
+  const saveMessage = async (socket, data) => {
+    try {
+    // Add message to Chat collection
+      await ChatModel.create({
+        message: data.message,
+        senderId: data.senderId,
+        receiverId: data.receiverId,
+      });
+
+      // Retrieve updated conversation
+      const messages = await ChatModel.find({
+        senderId: data.senderId,
+        receiverId: data.receiverId,
+      });
+
+      const messagesTwo = await ChatModel.find({
+        senderId: data.receiverId,
+        receiverId: data.senderId,
+      });
+
+      // Combine all messages
+      const allMessages = [...messages, ...messagesTwo];
+
+      // Sort messages according to time sent
+      allMessages.sort((a, b) => a.createdAt - b.createdAt);
 
       // Send messages to frontend
-      socket.emit('All messages', { allMessages });
-      console.log(messages, messagesTwo);
-      console.log('done');
+      socket.emit('Latest conversation ', { allMessages });
     } catch (err) {
       console.log(err);
     }
@@ -84,6 +125,7 @@ const initChatsSocketController = () => {
   };
   return {
     onlineChat,
+    saveMessage,
     offlineChat,
   };
 };

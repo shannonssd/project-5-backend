@@ -46,7 +46,7 @@ class HandMeDownController extends BaseController {
 
     try {
       // Find all items listed in current users district
-      const itemsArr = await this.model.find({ 'addressDetails.district': district, handMeDowns: { $exists: true } }).select({ handMeDowns: 1, 'userDetails.name': 1, _id: 0 });
+      const itemsArr = await this.model.find({ 'addressDetails.district': district, handMeDowns: { $exists: true } }).select({ handMeDowns: 1, 'userDetails.name': 1, _id: 1 });
 
       // Find all items liked by current user
       const user = await this.model.findOne({ _id: userId });
@@ -117,8 +117,8 @@ class HandMeDownController extends BaseController {
         handMeDowns: {
           $elemMatch: { _id: itemId },
         },
-      }).select({ 'userDetails.name': 1, _id: 0 });
-
+      }).select({ 'userDetails.name': 1 });
+      console.log('ITEMMMMMMM', item);
       // Query user's document to see if they've liked this item
       const user = await this.model.findOne({ _id: userId });
       let usersLikedItems = [];
@@ -155,7 +155,7 @@ class HandMeDownController extends BaseController {
     // Find users documents and store new item
     try {
       const user = await this.model.findById(userId);
-
+      console.log(user);
       // Store profile pic in AWS S3 and return image link for storage in DB
       const imageLink = await handleImage(photo);
 

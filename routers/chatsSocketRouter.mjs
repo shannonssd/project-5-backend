@@ -1,3 +1,4 @@
+/* eslint-disable max-len */
 /* eslint-disable no-param-reassign */
 /*
  * ========================================================
@@ -24,6 +25,7 @@ export default function chatsSocketRoutes(io) {
 
   // Socket routes
   io.on('connection', (socket) => {
+    console.log('CONNECTED', socket.id);
     // Request frontend to send user data after connection
     socket.emit('Send data');
 
@@ -31,6 +33,11 @@ export default function chatsSocketRoutes(io) {
     socket.on('Sent data to backend', (data) => {
       data.userSocketId = socket.id;
       chatsSocketController.onlineChat(socket, data);
+    });
+
+    // Upon receiving message, store in DB and inform user and textee (if they are also in the chatroom)
+    socket.on('Send message', (data) => {
+      chatsSocketController.saveMessage(socket, data);
     });
 
     // On disconnect from socket, remove document from Online Chat colleciton
