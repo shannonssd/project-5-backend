@@ -1,7 +1,4 @@
 /* eslint-disable no-console */
-/* eslint-disable max-len */
-/* eslint-disable no-underscore-dangle */
-/* eslint-disable no-useless-constructor */
 /*
  * ========================================================
  * ========================================================
@@ -21,16 +18,15 @@ const { BACKEND_URL } = process.env;
  * ========================================================
  * ========================================================
  *
- *                    User Controller
+ *                    Chats Controller
  *
  * ========================================================
  * ========================================================
  */
 class ChatsController extends BaseController {
-  constructor(model, userModel, OnlineChatModel) {
+  constructor(model, userModel) {
     super(model);
     this.userModel = userModel;
-    this.OnlineChatModel = OnlineChatModel;
   }
 
   /*
@@ -67,29 +63,6 @@ class ChatsController extends BaseController {
       // console.log('texteeData', texteeData);
 
       res.status(200).json({ texteeData });
-    } catch (err) {
-      console.log(err);
-    }
-  }
-
-  /*
-  * ========================================================
-  *                If user is in chat room,
-  *           add details to online chat collection
-  * ========================================================
-  */
-  async onlineChat(socket, data) {
-    console.log('<=== socket data ===>', data);
-
-    try {
-    // Add data to Online Chat collection
-      await this.OnlineChatModel.create({
-        onlineUserId: data.onlineUserId,
-        texteeId: data.texteeId,
-        userSocketId: data.userSocketId,
-      });
-
-      socket.emit('done!');
     } catch (err) {
       console.log(err);
     }

@@ -1,4 +1,3 @@
-/* eslint-disable no-console */
 /*
  * ========================================================
  * ========================================================
@@ -21,14 +20,13 @@ import ChatsController from '../controllers/chatsController.mjs';
 // Import models
 import UserModel from '../models/userModel.mjs';
 import ChatModel from '../models/chatModel.mjs';
-import OnlineChatModel from '../models/onlineChatModel.mjs';
 import NoticeModel from '../models/noticeModel.mjs';
-import InterestGroupModel from '../models/interestGroupModel.mjs';
 
 // Initialise controllers
 const userController = new UserController(UserModel);
 const handMeDownsController = new HandMeDownsController(UserModel);
-const chatsController = new ChatsController(ChatModel, UserModel, OnlineChatModel);
+const chatsController = new ChatsController(ChatModel, UserModel);
+
 /*
  * ========================================================
  * ========================================================
@@ -38,11 +36,11 @@ const chatsController = new ChatsController(ChatModel, UserModel, OnlineChatMode
  * ========================================================
  * ========================================================
  */
-export default function routes(app, io) {
+export default function routes(app) {
   // User sign up and login routes
   app.use('/users', userRouter(userController));
   // Hand me downs page routes
   app.use('/hand-me-downs', handMeDownsRouter(handMeDownsController));
   // Chats page routes
-  app.use('/chats', chatsRouter(chatsController, io));
+  app.use('/chats', chatsRouter(chatsController));
 }
