@@ -16,22 +16,7 @@ import mongoose from 'mongoose';
 import { createServer } from 'http';
 import { Server } from 'socket.io';
 import bindRoutes from './routes/routes.mjs';
-
-const app = express();
-const FRONTEND_URL = process.env.FRONTEND_URL || 'http://localhost:3000';
-
-app.use(cors({
-  credentials: true,
-  origin: FRONTEND_URL,
-}));
-
-const httpServer = createServer(app);
-const io = new Server(httpServer, {
-  cors: {
-    credentials: true,
-    origin: FRONTEND_URL,
-  },
-});
+import chatsSocketRoutes from './routers/chatsSocketRouter.mjs';
 
 dotenv.config();
 
@@ -45,13 +30,21 @@ dotenv.config();
 * ========================================================
 */
 // Initialise Express instance
-// const app = express();
-// Set CORS headers
-// const FRONTEND_URL = process.env.FRONTEND_URL || 'http://localhost:3000';
-// app.use(cors({
-//   credentials: true,
-//   origin: FRONTEND_URL,
-// }));
+const app = express();
+
+const FRONTEND_URL = process.env.FRONTEND_URL || 'http://localhost:3000';
+app.use(cors({
+  credentials: true,
+  origin: FRONTEND_URL,
+}));
+
+const httpServer = createServer(app);
+const io = new Server(httpServer, {
+  cors: {
+    credentials: true,
+    origin: FRONTEND_URL,
+  },
+});
 // Bind cookie parser middleware to parse cookies in requests
 app.use(cookieParser());
 // Bind Express middleware to parse JSON request bodies
@@ -71,7 +64,8 @@ app.use(express.static('public'));
  * ========================================================
  * ========================================================
  */
-bindRoutes(app, io);
+bindRoutes(app);
+chatsSocketRoutes(io);
 
 /*
 * ========================================================
@@ -87,7 +81,7 @@ bindRoutes(app, io);
 const uri = process.env.MONGODB_URI;
 const PORT = process.env.PORT || 3004;
 
-// only connect to port after connecting to db
+// Only connect to port after connecting to db
 mongoose.connect(uri)
   .then(() => {
     httpServer.listen(PORT);
