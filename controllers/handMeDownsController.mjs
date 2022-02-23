@@ -46,7 +46,9 @@ class HandMeDownController extends BaseController {
 
     try {
       // Find all items listed in current users district
-      const itemsArr = await this.model.find({ 'addressDetails.district': district, handMeDowns: { $exists: true } }).select({ handMeDowns: 1, 'userDetails.name': 1, _id: 1 });
+      const itemsArr = await this.model.find({ 'addressDetails.district': district, handMeDowns: { $exists: true } }).select({
+        handMeDowns: 1, 'userDetails.name': 1, _id: 1, 'userDetails.photo': 1, 'addressDetails.displayAddress': 1,
+      });
 
       // Find all items liked by current user
       const user = await this.model.findOne({ _id: userId });

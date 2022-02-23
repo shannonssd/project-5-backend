@@ -31,6 +31,9 @@ const interestGroupSchema = new Schema(
     name: {
       type: String,
     },
+    creatorName: {
+      type: String,
+    },
     description: {
       type: String,
     },
@@ -50,9 +53,6 @@ const interestGroupSchema = new Schema(
             type: String,
           },
           post: {
-            type: String,
-          },
-          links: {
             type: String,
           },
           likedBy: {
