@@ -18,15 +18,19 @@ const router = express.Router();
  * ========================================================
  * ========================================================
  *
- *            User router with various paths
+ *          Interest group router with various paths
  *
  * ========================================================
  * ========================================================
  */
-export default function userRouter(controller) {
-  // Route for new sign up
-  router.post('/signup', multerUpload.single('photo'), controller.signUp.bind(controller));
-  // Route for login attempt
-  router.get('/login', controller.login.bind(controller));
+export default function interestGroupRouter(controller) {
+  // Route for adding new interest group
+  router.post('/add-group', multerUpload.single('photo'), controller.addGroup.bind(controller));
+  // Route for showing all interest groups in the district
+  router.get('/show-groups', controller.showAllGroups.bind(controller));
+  // Route for following an interest group
+  router.post('/follow-group', controller.followGroup.bind(controller));
+  // Route for unfollowing an interest group
+  router.post('/unfollow-group', controller.unfollowGroup.bind(controller));
   return router;
 }
