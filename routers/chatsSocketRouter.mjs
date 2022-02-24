@@ -25,7 +25,6 @@ export default function chatsSocketRoutes(io) {
 
   // Socket routes
   io.on('connection', (socket) => {
-    console.log('CONNECTED', socket.id);
     // Request frontend to send user data after connection
     socket.emit('Send data');
 
@@ -37,7 +36,7 @@ export default function chatsSocketRoutes(io) {
 
     // Upon receiving message, store in DB and inform user and textee (if they are also in the chatroom)
     socket.on('Send message', (data) => {
-      chatsSocketController.saveMessage(socket, data);
+      chatsSocketController.saveMessage(socket, data, io);
     });
 
     // On disconnect from socket, remove document from Online Chat colleciton

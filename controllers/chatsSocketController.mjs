@@ -1,3 +1,4 @@
+/* eslint-disable max-len */
 /* eslint-disable no-console */
 /*
  * ========================================================
@@ -32,12 +33,18 @@ const initChatsSocketController = () => {
   */
   const onlineChat = async (socket, data) => {
     try {
-    // Add user to Online Chat collection
-      await OnlineChatModel.create({
-        onlineUserId: data.onlineUserId,
-        texteeId: data.texteeId,
-        userSocketId: data.userSocketId,
-      });
+    // Add user to Online Chat collection or update current document
+      const onlineArchive = await OnlineChatModel.findOneAndUpdate({ onlineUserId: data.onlineUserId, texteeId: data.texteeId }, { userSocketId: data.userSocketId }, { new: true });
+
+      socket.join(`Chat room${data.onlineUserId}`);
+
+      if (onlineArchive === null) {
+        await OnlineChatModel.create({
+          onlineUserId: data.onlineUserId,
+          texteeId: data.texteeId,
+          userSocketId: data.userSocketId,
+        });
+      }
 
       // Retrieve all messages between users
       const messages = await ChatModel.find({
@@ -63,6 +70,7 @@ const initChatsSocketController = () => {
         allMessages,
         user,
       };
+
       // Send messages to frontend
       socket.emit('All messages', { sendData });
     } catch (err) {
@@ -77,9 +85,9 @@ const initChatsSocketController = () => {
   *     and textee (if they are also in the chatroom)
   * ========================================================
   */
-  const saveMessage = async (socket, data) => {
+  const saveMessage = async (socket, data, io) => {
     try {
-    // Add message to Chat collection
+      // Add message to Chat collection
       await ChatModel.create({
         message: data.message,
         senderId: data.senderId,
@@ -103,8 +111,17 @@ const initChatsSocketController = () => {
       // Sort messages according to time sent
       allMessages.sort((a, b) => a.createdAt - b.createdAt);
 
-      // Send messages to frontend
-      socket.emit('Latest conversation ', { allMessages });
+      // Check if textee is also viewing the same chat
+      const texteeSocketId = await OnlineChatModel.findOne({ onlineUserId: data.receiverId, texteeId: data.senderId });
+
+      // If yes, then send latest messages to textee
+      if (texteeSocketId !== null) {
+        socket.join([`Chat room${data.receiverId}`, `Chat room${data.senderId}`]);
+        io.to(`Chat room${data.receiverId}`).emit('Latest conversation', { allMessages });
+      }
+
+      // Send messages to users frontend
+      socket.emit('Latest conversation', { allMessages });
     } catch (err) {
       console.log(err);
     }
