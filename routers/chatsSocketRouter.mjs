@@ -15,7 +15,7 @@ import initChatsSocketController from '../controllers/chatsSocketController.mjs'
  * ========================================================
  * ========================================================
  *
- *        Chats Socket Routes with various paths
+ *        Chats socket routes with various paths
  *
  * ========================================================
  * ========================================================

@@ -42,7 +42,20 @@ const interestGroupSchema = new Schema(
     },
     members: {
       // Embed userDetails ObjectId of users who have joined this group
-      type: [mongoose.Schema.Types.ObjectId],
+      type: [{
+        id: {
+          type: String,
+        },
+        name: {
+          type: String,
+        },
+        photo: {
+          type: String,
+        },
+        displayAddress: {
+          type: String,
+        },
+      }],
       // Prevent empty array from automatically being defined
       default: undefined,
     },
@@ -52,14 +65,25 @@ const interestGroupSchema = new Schema(
           postedBy: {
             type: String,
           },
+          posteePhoto: {
+            type: String,
+          },
+          displayAddress: {
+            type: String,
+          },
           post: {
             type: String,
           },
           likedBy: {
           // Embed userDetails ObjectId of users who have joined this group
-            type: [mongoose.Schema.Types.ObjectId],
+            type: [String],
             // Prevent empty array from automatically being defined
             default: undefined,
+          },
+          createdAt: {
+            type: Date,
+            required: true,
+            default: Date.now,
           },
         },
       ],
