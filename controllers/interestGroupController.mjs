@@ -223,99 +223,91 @@ class InterestGroupController extends BaseController {
     }
   }
 
-  // /*
-  // * ========================================================
-  // *        Remove item for DB and update frontend
-  // * ========================================================
-  // */
-  // async removeItem(req, res) {
-  //   const {
-  //     userId, itemId,
-  //   } = req.body;
-  //   console.log(`DELETE Request: ${BACKEND_URL}/hand-me-downs/remove-item`);
-  //   console.log('<=== req.body ===>', req.body);
+  /*
+  * ========================================================
+  *                     Add new post to DB
+  * ========================================================
+  */
+  async addPost(req, res) {
+    const {
+      userName, userPhoto, displayAddress, post, interestGrpId,
+    } = req.body;
+    console.log(`POST Request: ${BACKEND_URL}/interest-group/new-post`);
+    console.log('<=== req.body ===>', req.body);
 
-  //   try {
-  //     // Remove item id from all other users likedHandMeDowns field
-  //     // ***check through peopleInterested userId to remove likedHnadMeDown ObjectId
-  //     // await this.model.updateMany({ }, { $pull: { likedHandMeDowns: itemId } });
+    try {
+      // Add post to interest group collection
+      const interestGrp = await this.model.findOne({ _id: interestGrpId });
+      console.log(interestGrp);
+      if (interestGrp.posts !== undefined) {
+        interestGrp.posts.push({
+          postedBy: userName,
+          posteePhoto: userPhoto,
+          displayAddress,
+          post,
+        });
+      } else {
+        interestGrp.posts = [{
+          postedBy: userName,
+          posteePhoto: userPhoto,
+          displayAddress,
+          post,
+        }];
+      }
+      const newPostsArr = interestGrp.posts;
+      newPostsArr.sort((a, b) => b.createdAt - a.createdAt);
+      await interestGrp.save();
 
-  //     // Remove item from user's document
-  //     await this.model.updateOne({ _id: userId }, {
-  //       $pull: {
-  //         handMeDowns: { _id: itemId },
-  //       },
-  //     });
+      // Update frontend
+      res.status(200).json({ newPostsArr });
+    } catch (err) {
+      console.log(err);
+    }
+  }
 
-  //     // Update frontend
-  //     res.status(200).json({ message: 'Item succesfully deleted' });
-  //   } catch (err) {
-  //     console.log(err);
-  //   }
-  // }
+  /*
+  * ========================================================
+  *                   Like/unlike post
+  * ========================================================
+  */
+  async likePost(req, res) {
+    const {
+      userId, postId,
+    } = req.body;
+    console.log(`POST Request: ${BACKEND_URL}/interest-group/like-post`);
+    console.log('<=== req.body ===>', req.body);
 
-  // /*
-  // * ========================================================
-  // *     Like/unlike item in seller and users documents
-  // * ========================================================
-  // */
-  // async likeItem(req, res) {
-  //   const {
-  //     userId, itemId,
-  //   } = req.body;
-  //   console.log(`POST Request: ${BACKEND_URL}/hand-me-downs/like-item`);
-  //   console.log('<=== req.body ===>', req.body);
+    try {
+      // Retrieve post sub document
+      const postArr = await this.model.findOne({ 'posts._id': postId }, {
+        posts: {
+          $elemMatch: { _id: postId },
+        },
+      });
 
-  //   try {
-  //     // Retrieve sellers sub document
-  //     const sellerObj = await this.model.findOne({ 'handMeDowns._id': itemId }, {
-  //       handMeDowns: {
-  //         $elemMatch: { _id: itemId },
-  //       },
-  //     });
-  //     const sellerItem = sellerObj.handMeDowns[0];
-  //     let { peopleInterested } = sellerItem;
+      const postObj = postArr.posts[0];
 
-  //     // Check if item has been liked in sellers document
-  //     // Remove if present, else add
-  //     let isLiked = false;
-  //     if (peopleInterested === undefined) {
-  //       peopleInterested = [userId];
-  //       sellerObj.handMeDowns[0].peopleInterested = peopleInterested;
-  //       isLiked = true;
-  //     } else if (!peopleInterested.includes(userId)) {
-  //       peopleInterested.push(userId);
-  //       sellerObj.handMeDowns[0].peopleInterested = peopleInterested;
-  //       isLiked = true;
-  //     } else {
-  //       const updatePeopleInterested = peopleInterested.filter((id) => id !== userId);
-  //       sellerObj.handMeDowns[0].peopleInterested = updatePeopleInterested;
-  //     }
-  //     // Update sellers subdocument
-  //     await sellerObj.save();
+      // Check if post has been liked by user
+      // Remove if present, else add
+      if (postObj.likedBy === undefined) {
+        postArr.posts[0].likedBy = userId;
+      } else if (!postObj.likedBy.includes(userId)) {
+        postArr.posts[0].likedBy.push(userId);
+      } else {
+        const updatedLikedBy = postObj.likedBy.filter((id) => id !== userId);
+        postArr.posts[0].likedBy = updatedLikedBy;
+      }
+      const newPostsArr = postArr.posts[0].likedBy;
 
-  //     // Retrieve users sub document
-  //     const user = await this.model.findOne({ _id: userId });
+      // Update interest group's posts subdocument
+      await postArr.save();
 
-  //     // Check if item has been liked in users document
-  //     // Remove if present, else add
-  //     if (user.likedHandMeDowns === undefined) {
-  //       user.likedHandMeDowns = [itemId];
-  //     } else if (isLiked) {
-  //       user.likedHandMeDowns.push(itemId);
-  //     } else {
-  //       const likedArr = user.likedHandMeDowns;
-  //       user.likedHandMeDowns = likedArr.filter((id) => id !== itemId);
-  //     }
-  //     // Update users subdocument
-  //     await user.save();
-
-  //     // Update frontend
-  //     res.status(200).json({ message: 'Changes made to DB', isLiked });
-  //   } catch (err) {
-  //     console.log(err);
-  //   }
-  // }
+      // // Update frontend
+      res.status(200).json({ newPostsArr });
+    } catch (err) {
+      console.log(err);
+    }
+  }
 }
 
 export default InterestGroupController;

@@ -32,5 +32,9 @@ export default function interestGroupRouter(controller) {
   router.post('/follow-group', controller.followGroup.bind(controller));
   // Route for unfollowing an interest group
   router.post('/unfollow-group', controller.unfollowGroup.bind(controller));
+  // Route for writing a post
+  router.post('/new-post', controller.addPost.bind(controller));
+  // Route for liking / unliking a post
+  router.post('/like-post', controller.likePost.bind(controller));
   return router;
 }

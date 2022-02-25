@@ -65,6 +65,12 @@ const interestGroupSchema = new Schema(
           postedBy: {
             type: String,
           },
+          posteePhoto: {
+            type: String,
+          },
+          displayAddress: {
+            type: String,
+          },
           post: {
             type: String,
           },
@@ -73,6 +79,11 @@ const interestGroupSchema = new Schema(
             type: [String],
             // Prevent empty array from automatically being defined
             default: undefined,
+          },
+          createdAt: {
+            type: Date,
+            required: true,
+            default: Date.now,
           },
         },
       ],

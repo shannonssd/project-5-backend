@@ -126,12 +126,13 @@ class UserController extends BaseController {
     if (compare) {
       const userId = user._id;
       const { name } = user.userDetails;
+      const { photo } = user.userDetails;
       const { displayAddress } = user.addressDetails;
       const { district } = user.addressDetails;
       const payload = { id: userId, email: user.userDetails.email };
       const token = jwt.sign(payload, JWT_SALT, { expiresIn: '30mins' });
       return res.status(200).json({
-        success: true, token, payload, userId, name, displayAddress, district,
+        success: true, token, payload, userId, name, displayAddress, district, photo,
       });
     }
     // If password incorrect inform user
