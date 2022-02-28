@@ -289,6 +289,7 @@ class InterestGroupController extends BaseController {
 
       // Check if post has been liked by user
       // Remove if present, else add
+      let isRemoved = false;
       if (postObj.likedBy === undefined) {
         postArr.posts[0].likedBy = userId;
       } else if (!postObj.likedBy.includes(userId)) {
@@ -296,14 +297,15 @@ class InterestGroupController extends BaseController {
       } else {
         const updatedLikedBy = postObj.likedBy.filter((id) => id !== userId);
         postArr.posts[0].likedBy = updatedLikedBy;
+        isRemoved = true;
       }
       const newPostsArr = postArr.posts[0].likedBy;
-
+      console.log('<<<< new post arr >>>>', newPostsArr);
       // Update interest group's posts subdocument
       await postArr.save();
 
       // // Update frontend
-      res.status(200).json({ newPostsArr });
+      res.status(200).json({ newPostsArr, isRemoved });
     } catch (err) {
       console.log(err);
     }
