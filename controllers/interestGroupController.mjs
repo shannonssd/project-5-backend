@@ -17,7 +17,6 @@ import handleImage from '../utils/s3.mjs';
 
 dotenv.config();
 
-const { BACKEND_URL } = process.env;
 /*
  * ========================================================
  * ========================================================
@@ -43,10 +42,6 @@ class InterestGroupController extends BaseController {
       district, name, creatorName, description, userId,
     } = req.body;
     const photo = req.file;
-
-    console.log(`POST Request: ${BACKEND_URL}/interest-group/add-group`);
-    console.log('<=== req.body ===>', req.body);
-    console.log('<=== req.file ===>', req.file);
 
     try {
       // Store profile pic in AWS S3 and return image link for storage in DB
@@ -95,8 +90,6 @@ class InterestGroupController extends BaseController {
     const {
       userId, district,
     } = req.query;
-    console.log(`GET Request: ${BACKEND_URL}/interest-group/show-groups`);
-    console.log('<=== req.query ===>', req.query);
 
     try {
       // Find all interest groups in the users district
@@ -129,8 +122,6 @@ class InterestGroupController extends BaseController {
     const {
       userId, interestGrpId, district,
     } = req.body;
-    console.log(`POST Request: ${BACKEND_URL}/interest-group/follow-group`);
-    console.log('<=== req.body ===>', req.body);
 
     try {
       // Query user's document to add interest group under followed
@@ -139,7 +130,6 @@ class InterestGroupController extends BaseController {
       // Query DB for interest group document
       const interestGroup = await this.model.findOne({ _id: interestGrpId });
 
-      console.log('interGrp', interestGroup);
       // Add user as member of interest group
       if (interestGroup.members !== undefined) {
         interestGroup.members.push({
@@ -157,10 +147,6 @@ class InterestGroupController extends BaseController {
         }];
       }
       await interestGroup.save();
-
-      // // Query user's document to add interest group under followed
-      // const user = await this.userModel.findOne({ _id: userId });
-      console.log('user', user);
 
       if (user.interestGroups !== undefined) {
         user.interestGroups.push(interestGrpId);
@@ -189,14 +175,11 @@ class InterestGroupController extends BaseController {
     const {
       userId, interestGrpId, district,
     } = req.body;
-    console.log(`POST Request: ${BACKEND_URL}/interest-group/unfollow-group`);
-    console.log('<=== req.body ===>', req.body);
 
     try {
       // Query DB for interest group document
       const interestGroup = await this.model.findOne({ _id: interestGrpId });
       const { members } = interestGroup;
-      // const updatedMembers = members.filter((memberId) => memberId !== userId);
       const updatedMembers = [];
       for (let i = 0; i < members.length; i += 1) {
         if (members[i].id !== userId) {
@@ -204,7 +187,6 @@ class InterestGroupController extends BaseController {
         }
       }
       interestGroup.members = updatedMembers;
-      console.log('intGro', interestGroup.members);
       await interestGroup.save();
 
       // Query user's document to unfollow interest group
@@ -232,13 +214,10 @@ class InterestGroupController extends BaseController {
     const {
       userName, userPhoto, displayAddress, post, interestGrpId,
     } = req.body;
-    console.log(`POST Request: ${BACKEND_URL}/interest-group/new-post`);
-    console.log('<=== req.body ===>', req.body);
 
     try {
       // Add post to interest group collection
       const interestGrp = await this.model.findOne({ _id: interestGrpId });
-      console.log(interestGrp);
       if (interestGrp.posts !== undefined) {
         interestGrp.posts.push({
           postedBy: userName,
@@ -274,8 +253,6 @@ class InterestGroupController extends BaseController {
     const {
       userId, postId,
     } = req.body;
-    console.log(`POST Request: ${BACKEND_URL}/interest-group/like-post`);
-    console.log('<=== req.body ===>', req.body);
 
     try {
       // Retrieve post sub document
@@ -300,7 +277,6 @@ class InterestGroupController extends BaseController {
         isRemoved = true;
       }
       const newPostsArr = postArr.posts[0].likedBy;
-      console.log('<<<< new post arr >>>>', newPostsArr);
       // Update interest group's posts subdocument
       await postArr.save();
 

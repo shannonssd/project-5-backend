@@ -85,7 +85,5 @@ const PORT = process.env.PORT || 3004;
 mongoose.connect(uri)
   .then(() => {
     httpServer.listen(PORT);
-    console.log(`connected to port ${PORT}`);
-    console.log('connected to db');
   })
   .catch((err) => console.log(err));
