@@ -17,7 +17,6 @@ import handleImage from '../utils/s3.mjs';
 
 dotenv.config();
 
-const { BACKEND_URL } = process.env;
 /*
  * ========================================================
  * ========================================================
@@ -41,8 +40,6 @@ class HandMeDownController extends BaseController {
     const {
       userId, district,
     } = req.query;
-    console.log(`GET Request: ${BACKEND_URL}/hand-me-downs/show-all-items`);
-    console.log('<=== req.query ===>', req.query);
 
     try {
       // Find all items listed in current users district
@@ -73,8 +70,6 @@ class HandMeDownController extends BaseController {
     const {
       userId,
     } = req.query;
-    console.log(`GET Request: ${BACKEND_URL}/hand-me-downs/show-users-items`);
-    console.log('<=== req.query ===>', req.query);
 
     try {
       // Query DB for user's document
@@ -110,8 +105,6 @@ class HandMeDownController extends BaseController {
     const {
       userId, itemId,
     } = req.query;
-    console.log(`GET Request: ${BACKEND_URL}/hand-me-downs/show-item`);
-    console.log('<=== req.query ===>', req.query);
 
     try {
       // Query DB for items subdocument
@@ -120,7 +113,6 @@ class HandMeDownController extends BaseController {
           $elemMatch: { _id: itemId },
         },
       }).select({ 'userDetails.name': 1 });
-      console.log('ITEMMMMMMM', item);
       // Query user's document to see if they've liked this item
       const user = await this.model.findOne({ _id: userId });
       let usersLikedItems = [];
@@ -150,9 +142,6 @@ class HandMeDownController extends BaseController {
       itemName, description, condition, userId,
     } = req.body;
     const photo = req.file;
-    console.log(`POST Request: ${BACKEND_URL}/hand-me-downs/add-item`);
-    console.log('<=== req.body ===>', req.body);
-    console.log('<=== req.file ===>', req.file);
 
     // Find users documents and store new item
     try {
@@ -195,14 +184,8 @@ class HandMeDownController extends BaseController {
     const {
       userId, itemId,
     } = req.body;
-    console.log(`DELETE Request: ${BACKEND_URL}/hand-me-downs/remove-item`);
-    console.log('<=== req.body ===>', req.body);
 
     try {
-      // Remove item id from all other users likedHandMeDowns field
-      // ***check through peopleInterested userId to remove likedHnadMeDown ObjectId
-      // await this.model.updateMany({ }, { $pull: { likedHandMeDowns: itemId } });
-
       // Remove item from user's document
       await this.model.updateOne({ _id: userId }, {
         $pull: {
@@ -226,8 +209,6 @@ class HandMeDownController extends BaseController {
     const {
       userId, itemId,
     } = req.body;
-    console.log(`POST Request: ${BACKEND_URL}/hand-me-downs/like-item`);
-    console.log('<=== req.body ===>', req.body);
 
     try {
       // Retrieve sellers sub document

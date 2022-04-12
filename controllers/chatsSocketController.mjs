@@ -134,8 +134,6 @@ const initChatsSocketController = () => {
   * ========================================================
   */
   const offlineChat = async (id) => {
-    console.log('bye!');
-    console.log('disconnect ID', id);
     await OnlineChatModel.deleteOne({
       userSocketId: id,
     });
