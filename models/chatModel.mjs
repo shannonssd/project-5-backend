@@ -7,26 +7,37 @@
  * ========================================================
  * ========================================================
  */
-import express from 'express';
-import multer from 'multer';
-
-// Set name of photo upload directory
-const multerUpload = multer({ dest: './public/uploads' });
-const router = express.Router();
+import mongoose from 'mongoose';
 
 /*
  * ========================================================
  * ========================================================
  *
- *            User router with various paths
+ *              Schema describing structure of
+ *              documents for chats collection
  *
  * ========================================================
  * ========================================================
  */
-export default function userRouter(controller) {
-  // Route for new sign up
-  router.post('/signup', multerUpload.single('photo'), controller.signUp.bind(controller));
-  // Route for login attempt
-  router.get('/login', controller.login.bind(controller));
-  return router;
-}
+const { Schema } = mongoose;
+
+// Initialize new instance of Schema for chats collection
+const chatSchema = new Schema(
+  {
+    senderId: {
+      type: String,
+    },
+    receiverId: {
+      type: String,
+    },
+    message: {
+      type: String,
+    },
+  },
+  {
+    timestamps: true,
+  },
+);
+
+// Create model from schema to access and alter database
+export default mongoose.model('Chat', chatSchema);

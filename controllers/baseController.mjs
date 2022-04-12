@@ -8,8 +8,7 @@
  * ========================================================
  */
 class BaseController {
-  constructor(db, model) {
-    this.db = db;
+  constructor(model) {
     this.model = model;
   }
 }
