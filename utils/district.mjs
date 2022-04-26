@@ -1,4 +1,3 @@
-/* eslint-disable no-console */
 export default function assignDistrict(postalCode) {
   const digitsArr = postalCode.split('');
   const districtNum = digitsArr[0] + digitsArr[1];

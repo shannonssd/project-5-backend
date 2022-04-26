@@ -146,7 +146,6 @@ class HandMeDownController extends BaseController {
     // Find users documents and store new item
     try {
       const user = await this.model.findById(userId);
-      console.log(user);
       // Store profile pic in AWS S3 and return image link for storage in DB
       const imageLink = await handleImage(photo);
 
