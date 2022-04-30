@@ -84,7 +84,7 @@ www.neighbourlyapp.live
  </ul>
  
  <details>
-<summary><i><b> How It Was Achieved: </b></i></summary>
+<summary><i><b> How We Built This: </b></i></summary>
  <ol>
   <li><b> Establish Socket Connection: </b><br/> When a user enters a chatroom, a socket connection is established in the Express server. 
    <br/> The users socket ID, user ID and the user ID of the person they are texting is stored as a document in an <i>OnlineChatModel</i> collection in the database.
